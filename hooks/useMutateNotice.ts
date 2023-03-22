@@ -9,15 +9,18 @@ export const useMutateNotice = () => {
 
   const createNoticeMutation = useMutation(
     async (notice: Omit<Notice, 'id' | 'created_at'>) => {
-      const { data, error } = await supabase.from('notice').insert(notice)
+      const { data, error } = await supabase
+        .from('notices')
+        .insert(notice)
+        .select()
       if (error) throw new Error(error.message)
       return data
     },
     {
-      onSuccess: (res: any) => {
-        const previousNotices = queryClient.getQueryData<Notice[]>('todos')
+      onSuccess: (res) => {
+        const previousNotices = queryClient.getQueryData<Notice[]>('notices')
         if (previousNotices) {
-          queryClient.setQueryData('todos', [...previousNotices, res[0]])
+          queryClient.setQueryData('notices', [...previousNotices, res[0]])
         }
         reset()
       },
@@ -32,13 +35,14 @@ export const useMutateNotice = () => {
     async (notice: EditedNotice) => {
       const { data, error } = await supabase
         .from('notices')
-        .update({ title: notice.content })
+        .update({ content: notice.content })
         .eq('id', notice.id)
+        .select()
       if (error) throw new Error(error.message)
       return data
     },
     {
-      onSuccess: (res: any, variables) => {
+      onSuccess: (res, variables) => {
         const previousNotice = queryClient.getQueryData<Notice[]>('notices')
         if (previousNotice) {
           queryClient.setQueryData(
@@ -63,6 +67,7 @@ export const useMutateNotice = () => {
         .from('notices')
         .delete()
         .eq('id', id)
+        .select()
       if (error) throw new Error(error.message)
       return data
     },

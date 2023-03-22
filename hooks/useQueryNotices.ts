@@ -15,7 +15,7 @@ export const useQueryNotices = () => {
     return data
   }
 
-  return useQuery<QueryKey, Notice[], Error, QueryKey>({
+  return useQuery<QueryKey, Error, Notice[], QueryKey>({
     queryKey: ['notices'],
     queryFn: getNotices,
     staleTime: 0,

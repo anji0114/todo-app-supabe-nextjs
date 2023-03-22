@@ -22,14 +22,14 @@ const useStore = create<State>((set) => ({
     set({
       editedTask: { id: '', title: '' },
     }),
+
   updateEditedNotice: (payload) =>
     set({
-      editedTask: { id: payload.id, title: payload.content },
+      editedNotice: { id: payload.id, content: payload.content },
     }),
-
   resetEditedNotice: () =>
     set({
-      editedTask: { id: '', title: '' },
+      editedNotice: { id: '', content: '' },
     }),
 }))
 

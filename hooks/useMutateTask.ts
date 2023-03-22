@@ -9,13 +9,15 @@ export const useMutateTask = () => {
 
   const createTaskMutation = useMutation(
     async (task: Omit<Task, 'id' | 'created_at'>) => {
-      const { data, error } = await supabase.from('todos').insert(task)
+      const { data, error } = await supabase.from('todos').insert(task).select()
+
       if (error) throw new Error(error.message)
       return data
     },
     {
-      onSuccess: (res: any) => {
+      onSuccess: (res) => {
         const previousTodos = queryClient.getQueryData<Task[]>('todos')
+
         if (previousTodos) {
           queryClient.setQueryData('todos', [...previousTodos, res[0]])
         }
@@ -33,11 +35,13 @@ export const useMutateTask = () => {
         .from('todos')
         .update({ title: task.title })
         .eq('id', task.id)
+        .select()
+
       if (error) throw new Error(error.message)
       return data
     },
     {
-      onSuccess: (res: any, variables) => {
+      onSuccess: (res, variables) => {
         const previousTodos = queryClient.getQueryData<Task[]>('todos')
         if (previousTodos) {
           queryClient.setQueryData(
@@ -58,8 +62,13 @@ export const useMutateTask = () => {
 
   const deleteTaskMutation = useMutation(
     async (id: string) => {
-      const { data, error } = await supabase.from('todos').delete().eq('id', id)
+      const { data, error } = await supabase
+        .from('todos')
+        .delete()
+        .eq('id', id)
+        .select()
       if (error) throw new Error(error.message)
+
       return data
     },
     {

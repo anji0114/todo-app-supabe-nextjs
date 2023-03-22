@@ -1,10 +1,9 @@
 import '../styles/globals.css'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { User } from '@supabase/supabase-js'
 import { supabase } from '../utils/supabase'
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
@@ -45,8 +44,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const validateSession = async () => {
     const { data } = await supabase.auth.getSession()
     const user = data.session?.user
-
-    console.log(user)
 
     if (user && pathname === '/') {
       push('/dashboard')

@@ -1,4 +1,4 @@
-import { QueryKey, useQuery } from 'react-query'
+import { QueryKey, useQuery, UseQueryResult } from 'react-query'
 import { supabase } from '../utils/supabase'
 import { Task } from '../types/types'
 
@@ -15,7 +15,7 @@ export const useQueryTasks = () => {
     return data
   }
 
-  return useQuery<QueryKey, Task[], Error, QueryKey>({
+  return useQuery<QueryKey, Error, Task[], QueryKey>({
     queryKey: ['todos'],
     queryFn: getTasks,
     staleTime: Infinity,
